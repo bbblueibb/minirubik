@@ -1,0 +1,19 @@
+Input: 21345671111111
+Processor: RV32_ISS
+Validation convention: parse -> optimal solve -> replay returned path -> require solved
+
+GCC -O2 fair reference
+.text: 2436 B
+static data: 112828 B
+retired instructions: 12070973
+result: PASS
+
+Handwritten RV32I V7
+.text: 2272 B
+static data: 109219 B
+retired instructions: 11533821
+result: PASS
+
+Comparison
+Assembly retired-instruction reduction: 537152 (4.45%)
+Assembly .text reduction: 164 B (6.73%)
