@@ -1,0 +1,5 @@
+states checked: 3674160
+maximum heuristic: 8
+maximum exact distance: 11
+H1: PASS
+elapsed = 0:00.18

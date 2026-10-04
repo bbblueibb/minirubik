@@ -1,0 +1,42 @@
+checked 100000 / 3674160 states
+checked 200000 / 3674160 states
+checked 300000 / 3674160 states
+checked 400000 / 3674160 states
+checked 500000 / 3674160 states
+checked 600000 / 3674160 states
+checked 700000 / 3674160 states
+checked 800000 / 3674160 states
+checked 900000 / 3674160 states
+checked 1000000 / 3674160 states
+checked 1100000 / 3674160 states
+checked 1200000 / 3674160 states
+checked 1300000 / 3674160 states
+checked 1400000 / 3674160 states
+checked 1500000 / 3674160 states
+checked 1600000 / 3674160 states
+checked 1700000 / 3674160 states
+checked 1800000 / 3674160 states
+checked 1900000 / 3674160 states
+checked 2000000 / 3674160 states
+checked 2100000 / 3674160 states
+checked 2200000 / 3674160 states
+checked 2300000 / 3674160 states
+checked 2400000 / 3674160 states
+checked 2500000 / 3674160 states
+checked 2600000 / 3674160 states
+checked 2700000 / 3674160 states
+checked 2800000 / 3674160 states
+checked 2900000 / 3674160 states
+checked 3000000 / 3674160 states
+checked 3100000 / 3674160 states
+checked 3200000 / 3674160 states
+checked 3300000 / 3674160 states
+checked 3400000 / 3674160 states
+checked 3500000 / 3674160 states
+checked 3600000 / 3674160 states
+states checked: 3674160
+maximum search nodes: 118774
+worst-case rank: 2122780
+average search nodes: 2075
+H3: PASS
+elapsed = 1:40.02

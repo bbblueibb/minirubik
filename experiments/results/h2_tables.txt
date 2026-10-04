@@ -1,0 +1,6 @@
+permutation transitions: 15120 entries; valid and complete
+orientation transitions: 2187 entries; valid and complete
+permutation PDB: 5040 entries; solved=0; max=7; complete
+orientation PDB: 729 entries; solved=0; max=6; complete
+4-corner PDB: 68040 entries; solved=0; max=8; complete
+H2: PASS

@@ -18,9 +18,6 @@ enum {
     PATTERN_STATES = PATTERN_POSITIONS * PATTERN_ORIENTATIONS
 };
 
-static uint8_t ida_path[MAX_DEPTH];
-static uint8_t ida_solution_length;
-
 static uint32_t ida_nodes;
 static uint32_t ida_pruned;
 static uint8_t ida_iterations;
@@ -34,6 +31,20 @@ typedef struct {
     uint8_t position[PATTERN_CUBIES];
     uint8_t orientation[PATTERN_CUBIES];
 } pattern_state_t;
+
+typedef struct {
+    uint16_t p;
+    uint16_t o;
+    pattern_state_t pattern;
+
+    int8_t previous_face;
+    uint8_t next_move;
+} search_frame_t;
+
+static uint8_t ida_path[MAX_DEPTH];
+static uint8_t ida_solution_length;
+
+static search_frame_t ida_stack[MAX_DEPTH + 1];
 
 /*@ predicate valid_state(state_t *state) =
       (\forall integer i; 0 <= i < CUBIES ==>
@@ -215,43 +226,120 @@ static uint8_t heuristic(uint16_t p, uint16_t o, const pattern_state_t *pattern)
     return h > hc ? h : hc;
 }
 
-static int ida_dfs(uint16_t p, uint16_t o, pattern_state_t pattern ,uint8_t depth, uint8_t bound, int8_t previous_face)
+static int ida_dfs_iterative(uint16_t p, uint16_t o, pattern_state_t pattern, uint8_t bound)
 {
+    int top = 0;
+
+    ida_stack[0].p = p;
+    ida_stack[0].o = o;
+    ida_stack[0].pattern = pattern;
+    ida_stack[0].previous_face = -1;
+    ida_stack[0].next_move = 0;
+
     ++ida_nodes;
 
     uint8_t h = heuristic(p, o, &pattern);
 
-    if ((uint8_t) (depth + h) > bound) {
+    if (h > bound) {
         ++ida_pruned;
         return 0;
     }
 
     if (p == 0 && o == 0) {
-        ida_solution_length = depth;
+        ida_solution_length = 0;
         return 1;
     }
 
-    if (depth == bound)
-        return 0;
+    while (top >= 0) {
+        search_frame_t *frame = &ida_stack[top];
 
-    for (uint8_t face = 0; face < 3; ++face) {
-        if ((int8_t) face == previous_face){
-                continue;
-            }
-            uint16_t next_p = p;
-            uint16_t next_o = o;
-            pattern_state_t next_pattern = pattern;
+        /*
+         * All children of this node have been explored.
+         * Return to the parent.
+         */
+        if (frame->next_move >= MOVES) {
+            --top;
+            continue;
+        }
 
-            for (uint8_t turn = 0; turn < 3; ++turn) {
-                next_p = permutation_next(face, next_p);
-                next_o = orientation_next(face, next_o);
-                next_pattern = quarter_turn_pattern(next_pattern, face);
+        /*
+         * Remember the next move before descending.
+         * This replaces the return state normally kept
+         * by recursive function calls.
+         */
+        uint8_t move = frame->next_move++;
 
-                ida_path[depth] = (uint8_t) (face * 3U + turn);
+        uint8_t face;
+        uint8_t turns;
 
-                if (ida_dfs(next_p, next_o, next_pattern, (uint8_t) (depth + 1U), bound, (int8_t) face))
-                    return 1;
-            }
+        if (move < 3) {
+            face = 0;
+            turns = (uint8_t) (move + 1U);
+        } else if (move < 6) {
+            face = 1;
+            turns = (uint8_t) (move - 2U);
+        } else {
+            face = 2;
+            turns = (uint8_t) (move - 5U);
+        }
+
+        /*
+         * Consecutive moves on the same face are redundant.
+         */
+        if ((int8_t) face == frame->previous_face)
+            continue;
+
+        uint16_t next_p = frame->p;
+        uint16_t next_o = frame->o;
+        pattern_state_t next_pattern = frame->pattern;
+
+        /*
+         * move = R/R2/R', B/B2/B', or D/D2/D'.
+         * The transition tables contain quarter turns,
+         * so apply them one, two, or three times.
+         */
+        for (uint8_t turn = 0; turn < turns; ++turn) {
+            next_p = permutation_next(face, next_p);
+            next_o = orientation_next(face, next_o);
+            next_pattern =
+                quarter_turn_pattern(next_pattern, face);
+        }
+
+        uint8_t depth = (uint8_t) (top + 1);
+
+        ++ida_nodes;
+
+        h = heuristic(next_p, next_o, &next_pattern);
+
+        if ((uint8_t) (depth + h) > bound) {
+            ++ida_pruned;
+            continue;
+        }
+
+        ida_path[top] = move;
+
+        if (next_p == 0 && next_o == 0) {
+            ida_solution_length = depth;
+            return 1;
+        }
+
+        /*
+         * An unsolved state at the current bound cannot
+         * produce another child within this iteration.
+         */
+        if (depth == bound)
+            continue;
+
+        /*
+         * Push the child onto the explicit stack.
+         */
+        ++top;
+
+        ida_stack[top].p = next_p;
+        ida_stack[top].o = next_o;
+        ida_stack[top].pattern = next_pattern;
+        ida_stack[top].previous_face = (int8_t) face;
+        ida_stack[top].next_move = 0;
     }
 
     return 0;
@@ -274,7 +362,7 @@ static int solve_ida(const state_t *state)
     while (bound <= MAX_DEPTH) {
         ++ida_iterations;
 
-        if (ida_dfs(p, o, pattern, 0, bound, -1)) {
+        if (ida_dfs_iterative(p, o, pattern, bound)) {
             ida_final_bound = bound;
             return 1;
         }
@@ -379,7 +467,7 @@ static int output_failed(void)
     return fflush(stdout) != 0 || ferror(stdout);
 }
 
-
+#ifndef SOLVER_LIBRARY
 int main(int argc, char **argv)
 {
     state_t state;
@@ -406,3 +494,5 @@ int main(int argc, char **argv)
 
     return output_failed();
 }
+
+#endif
