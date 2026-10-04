@@ -1,0 +1,10 @@
+         U __modsi3
+         U __mulsi3
+         U __umodsi3
+         U fflush
+         U fprintf
+         U fputc
+         U fwrite
+         U printf
+         U stderr
+         U stdout

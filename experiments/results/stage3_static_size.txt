@@ -1,0 +1,33 @@
+/tmp/solver_target  :
+section                size     addr
+.interp                  28      792
+.note.gnu.property       48      824
+.note.gnu.build-id       36      872
+.note.ABI-tag            32      908
+.gnu.hash                48      944
+.dynsym                 360      992
+.dynstr                 242     1352
+.gnu.version             30     1594
+.gnu.version_r           80     1624
+.rela.dyn               456     1704
+.rela.plt               168     2160
+.init                    27     4096
+.plt                    128     4128
+.plt.got                 16     4256
+.plt.sec                112     4272
+.text                  3705     4384
+.fini                    13     8092
+.rodata              108672     8192
+.eh_frame_hdr            52   116864
+.eh_frame               216   116920
+.init_array               8   122160
+.fini_array               8   122168
+.data.rel.ro             72   122176
+.dynamic                496   122248
+.got                    120   122744
+.data                    16   122880
+.bss                    264   122912
+.comment                 45        0
+Total                115498
+
+

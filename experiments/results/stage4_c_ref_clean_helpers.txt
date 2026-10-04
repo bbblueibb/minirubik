@@ -1,0 +1,7 @@
+         U fflush
+         U fprintf
+         U fputc
+         U fwrite
+         U printf
+         U stderr
+         U stdout

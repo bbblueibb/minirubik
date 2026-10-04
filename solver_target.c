@@ -113,7 +113,33 @@ static uint16_t rank_permutation(const state_t *state)
                 ++smaller;
         }
 
-        p = (uint16_t) (p * (CUBIES - i) + smaller);
+        uint16_t scaled;
+
+        switch (i) {
+        case 0:
+            scaled = (uint16_t) ((p << 3) - p);       /* p * 7 */
+            break;
+        case 1:
+            scaled = (uint16_t) ((p << 2) + (p << 1)); /* p * 6 */
+            break;
+        case 2:
+            scaled = (uint16_t) ((p << 2) + p);       /* p * 5 */
+            break;
+        case 3:
+            scaled = (uint16_t) (p << 2);             /* p * 4 */
+            break;
+        case 4:
+            scaled = (uint16_t) ((p << 1) + p);       /* p * 3 */
+            break;
+        case 5:
+            scaled = (uint16_t) (p << 1);             /* p * 2 */
+            break;
+        default:
+            scaled = p;                               /* p * 1 */
+            break;
+        }
+
+        p = (uint16_t) (scaled + smaller);
     }
 
     return p;
@@ -200,11 +226,14 @@ static pattern_state_t quarter_turn_pattern(
 
         result.position[cubie] = destination;
 
-        result.orientation[cubie] =
-            (uint8_t) (
-                (pattern.orientation[cubie] +
-                 twist[face][destination]) %
-                3U);
+        uint8_t new_orientation =
+            (uint8_t) (pattern.orientation[cubie] +
+                    twist[face][destination]);
+
+        if (new_orientation >= 3U)
+            new_orientation = (uint8_t) (new_orientation - 3U);
+
+        result.orientation[cubie] = new_orientation;
     }
 
     return result;
@@ -416,7 +445,10 @@ static int valid(const state_t *state)
                 return 0;
         sum = (uint8_t) (sum + state->o[i]);
     }
-    return sum % 3U == 0;
+    while (sum >= 3U)
+        sum = (uint8_t) (sum - 3U);
+
+    return sum == 0;
 }
 
 /*@ requires valid_read_string(input);
@@ -453,7 +485,13 @@ static int parse_state(const char *input, state_t *state)
         int limit = i < 7 ? 7 : 3;
         if (input[i] < '1' || input[i] > '0' + limit)
             return 0;
-        (i < 7 ? state->p : state->o)[i % 7] = (uint8_t) (input[i] - '1');
+        
+        uint8_t value = (uint8_t) (input[i] - '1');
+
+        if (i < 7)
+            state->p[i] = value;
+        else
+            state->o[i - 7] = value;
     }
     return input[14] == '\0' && valid(state);
 }

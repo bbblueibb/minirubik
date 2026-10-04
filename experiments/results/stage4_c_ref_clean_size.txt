@@ -1,0 +1,14 @@
+experiments/solver_target_rv32i.o  :
+section               size   addr
+.text                  276      0
+.data                    0      0
+.bss                   179      0
+.rodata.str1.4         127      0
+.text.startup         2148      0
+.rodata             108536      0
+.sbss                   12      0
+.comment                35      0
+.riscv.attributes       28      0
+Total               111341
+
+

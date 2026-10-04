@@ -1,0 +1,11 @@
+experiments/solver_rv32i_ref.elf  :
+section               size     addr
+.text                 2168    65684
+.rodata             108516    67852
+.sbss                   12   180464
+.bss                   192   180476
+.comment                34        0
+.riscv.attributes       28        0
+Total               110950
+
+
