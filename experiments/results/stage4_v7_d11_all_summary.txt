@@ -1,0 +1,4 @@
+states completed: 2644 / 2644
+maximum instructions: 37478756
+worst state: 51342763312223
+50M gate: PASS

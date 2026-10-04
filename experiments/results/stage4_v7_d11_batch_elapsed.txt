@@ -1,0 +1,8 @@
+Exact distance-11 states tested: 2644
+Processor: RV32_ISS
+Elapsed time: 45 minutes 51.877 seconds
+Total seconds: 2751.8770985
+
+Maximum retired instructions: 37478756
+Worst state: 51342763312223
+50M gate: PASS
