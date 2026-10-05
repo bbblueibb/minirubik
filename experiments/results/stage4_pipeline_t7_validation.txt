@@ -1,0 +1,53 @@
+Stage 4 - Visual Pipeline / T7 Validation
+
+Processor:
+Ripes 5-stage processor
+ISA: RV32I
+M extension: disabled
+C extension: disabled
+
+Final solver test cases:
+1. Solved
+   input: 12345671111111
+   result: PASS
+   program exit code: 0
+
+2. Short
+   input: 25314672313211
+   optimal distance: 1
+   result: PASS
+   program exit code: 0
+
+3. Distance-11
+   input: 21345671111111
+   optimal distance: 11
+   result: PASS
+   program exit code: 0
+
+Instruction-level walkthrough:
+0x10488: slli t1, a1, 1
+0x1048c: add  t0, t0, t1
+0x10490: lhu  a0, 0(t0)
+
+Observed pipeline progression:
+Step 1: slli=EX,  add=ID,  lhu=IF
+Step 2: slli=MEM, add=EX,  lhu=ID
+Step 3: slli=WB,  add=MEM, lhu=EX
+Step 4:           add=WB,  lhu=MEM
+Step 5:                    lhu=WB
+Step 6: a0 register updated
+
+Observed values:
+a1 = 0x00000450
+t1 = 0x000008a0
+t0 = 0x00011250
+a0 = 0x00000cde
+
+Observed behavior:
+- IF/ID/EX/MEM/WB overlap: PASS
+- RAW dependency forwarding: observed
+- transition-table memory load: observed
+- write-back to register a0: observed
+- jalr control-flow flush: observed
+
+T7 result: PASS

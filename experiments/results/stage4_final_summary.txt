@@ -1,0 +1,43 @@
+Stage 4 Final Summary
+
+Hand-written RV32I solver:
+- final source: solver_rv32i.S
+- ISA: RV32I only
+- linked .text with RENDER=0: 2272 bytes
+- static data with RENDER=0: 109219 bytes
+- no heap
+- no recursion
+- no RV32M instructions
+
+Performance:
+- required D11 21345671111111: 11533821 retired instructions
+- all exact D11 states tested: 2644 / 2644
+- worst D11 state: 51342763312223
+- worst retired instructions: 37478756
+- 50M gate: PASS
+
+GCC fair reference:
+- linked .text: 2436 bytes
+- retired instructions: 12070973
+- handwritten assembly uses about 4.45% fewer instructions
+- handwritten assembly .text is about 6.73% smaller
+
+LED Matrix:
+- 35x25 matrix
+- row-major 32-bit RGB
+- initial cube rendering: PASS
+- state_p/state_o sticker mapping: PASS
+- short move-by-move animation: PASS
+- D11 move-by-move animation: PASS
+- final solved frame: PASS
+- RENDER=0 regression: PASS
+- RENDER=0 D11 remains 11533821 retired instructions
+
+Visual pipeline:
+- Ripes 5-stage processor
+- solved case: PASS
+- short case: PASS
+- D11 case: PASS
+- instruction-level walkthrough: PASS
+
+Stage 4 implementation: COMPLETE
