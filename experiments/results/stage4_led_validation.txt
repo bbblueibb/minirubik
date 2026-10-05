@@ -1,0 +1,20 @@
+LED Matrix configuration:
+Width: 35
+Height: 25
+
+Renderer:
+35x25 row-major LED matrix
+4x3 pixels per sticker
+2x2 stickers per cube face
+Unfolded layout: U / L F R B / D
+
+Validation:
+Solved-state rendering: PASS
+R-turn state 25314672313211 mapping: PASS
+Short one-move animation: PASS
+D11 input 21345671111111 initial rendering: PASS
+D11 move-by-move animation reaches solved state: PASS
+
+RENDER=0 regression:
+retired instructions: 11533821
+result: PASS

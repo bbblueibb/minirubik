@@ -1,0 +1,7 @@
+===== instructions retired
+11533821
+===== simulation information (processor configuration, input file, ...)
+ISA extensions: 
+processor: RV32_ISS
+source file: .\solver_rv32i_led_regression.elf
+

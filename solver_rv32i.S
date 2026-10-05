@@ -2,6 +2,10 @@
 #define INPUT_STATE "21345671111111"
 #endif
 
+#ifndef RENDER
+#define RENDER 0
+#endif
+
 .equ CUBIES,                 7
 .equ PERMUTATIONS,           5040
 .equ ORIENTATIONS,           729
@@ -127,6 +131,10 @@ _start:
     call validate_solution
 
     beq a0, x0, generic_validation_failed
+
+#if RENDER
+    call render_solution
+#endif
 
     # Success.
     li a0, 0
@@ -1239,3 +1247,8 @@ validate_solution_return:
 
     addi sp, sp, 32
     ret
+
+#if RENDER
+#include "ripes_led_symbols.S"
+#include "renderer_rv32i.inc"
+#endif
